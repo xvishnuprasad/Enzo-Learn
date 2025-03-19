@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 # Enzo Learn
 
-<Image src="welcome.png" alt="Welcome to Enzo Learn" width={800} height={400} />
+<Image src="welcome.jpng" alt="Welcome to Enzo Learn" width={800} height={400} />
 
 Enzo Learn is a state-of-the-art learning platform dedicated to making education accessible and engaging for students with diverse needs. Our focus is on delivering an experience that is both intuitive and supportive, ensuring every learner can succeed.
 
