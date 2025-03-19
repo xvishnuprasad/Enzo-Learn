@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <nav>
+        <a href="#welcome"><i class="fas fa-home"></i> Home</a>
+        <a href="#new-section"><i class="fas fa-plus"></i>Enzo Bot</a>
+        <a href="#features"><i class="fas fa-star"></i> Features</a>
+        <a href="#tools"><i class="fas fa-tools"></i> Learning Tools</a>
+        <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#team"><i class="fas fa-users"></i> Team</a>
+        <!-- Added Login link -->
+        <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </nav>
+      
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enzo Learn - Simple and clear, focused on learning</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Add styles for EnzoBot */
+    .enzobot-container {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+    
+    .enzobot-icon {
+      background-color: #ff9900;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .enzobot-text {
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .enzobot-container:hover .enzobot-icon {
+      transform: scale(1.1);
+      background-color: #ff7700;
+    }
+    
+    /* Update header for better alignment */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+    
+    /* Bot chat window styles */
+    .enzobot-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.enzobot-icon {
+  background-color: #3498db; /* Changed to match the button color scheme */
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+}
+
+.enzobot-text {
+  font-weight: bold;
+  color: #333;
+}
+
+.enzobot-container:hover .enzobot-icon {
+  transform: scale(1.1);
+  background-color: #2980b9; /* Darker shade for hover */
+}
+
+/* Bot chat window styles */
+.bot-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  max-height: 400px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.bot-chat.active {
+  display: flex;
+}
+
+.bot-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #3498db; /* Changed to match the button color scheme */
+  color: white;
+}
+
+.bot-header .enzobot-icon {
+  margin-right: 10px;
+  background-color: white;
+  color: #3498db; /* Changed to match */
+}
+
+.bot-close {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.bot-messages {
+  padding: 15px;
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: 280px;
+}
+
+.bot-input {
+  display: flex;
+  border-top: 1px solid #eee;
+  padding: 10px;
+}
+
+.bot-input input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.bot-input button {
+  background-color: #3498db; /* Changed to match the button color scheme */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.message {
+  margin-bottom: 10px;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 18px;
+}
+
+.bot-message {
+  background-color: #f1f1f1;
+  align-self: flex-start;
+  border-bottom-left-radius: 5px;
+}
+
+.user-message {
+  background-color: #3498db; /* Changed to match the button color scheme */
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 5px;
+  margin-left: auto;
+}
+  </style>
+</head>
+<body>
+  <!-- Loading Animation -->
+  <div class="loader" id="loader">
+    <div class="loader-circle"></div>
+  </div>
+
+  <!-- Header Section -->
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Enzo Learn Logo" id="logo-img">
+      <h1 class="logo-text">Enzo Learn</h1>
+    </div>
+    <div class="header-right">
+      <nav>
+        <a href="#welcome"><i class="fas fa-home"></i> Home</a>
+        <a href="#new-section"><i class="fas fa-robot"></i> Enzo Bot</a>
+        <a href="#features"><i class="fas fa-star"></i> Features</a>
+        <a href="#tools"><i class="fas fa-tools"></i> Learning Tools</a>
+        <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#team"><i class="fas fa-users"></i> Team</a>
+      </nav>
+      <!-- EnzoBot Button -->
+      <div class="enzobot-container" id="enzobot-button">
+        <div class="enzobot-icon">
+          <i class="fas fa-robot"></i>
+        </div>
+        <span class="enzobot-text"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- EnzoBot Chat Window -->
+  <div class="bot-chat" id="bot-chat">
+    <div class="bot-header">
+      <div class="enzobot-icon">
+        <i class="fas fa-robot"></i>
+      </div>
+      <span>ChatBot Assistant</span>
+      <div class="bot-close" id="bot-close">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <div class="bot-messages" id="bot-messages">
+      <!-- Messages will be added here -->
+    </div>
+    <div class="bot-input">
+      <input type="text" id="bot-input-field" placeholder="Ask EnzoBot...">
+      <button id="bot-send">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Welcome Section -->
+  <section id="welcome" class="welcome-section">
+    <div class="container">
+      <div class="welcome-content">
+        <div class="welcome-text fade-in">
+          <h2>Welcome to Enzo Learn</h2>
+          <p>Simple and clear, focused on learning. Our platform is designed to help students with special needs learn through interactive and engaging activities.</p>
+          <a href="#tools" class="btn">Get Started</a>
+          <a href="#about" class="btn btn-outline">Learn More</a>
+        </div>
+        <div class="welcome-image fade-in-delay-1">
+          <img src="home.png" alt="Student learning" id="welcome-img">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features-section">
+    <div class="container">
+      <h2 class="fade-in">Why Choose Enzo Learn?</h2>
+      <p class="fade-in">Our platform offers a variety of features designed to make learning accessible and enjoyable for all students.</p>
+      
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i class="fas fa-universal-access"></i>
+          </div>
+          <h3>Accessibility</h3>
+          <p>Designed with accessibility in mind, ensuring all students can use our platform regardless of their abilities.</p>
+        </div>
+        
+        <div class="feature-card fade-in-delay-1">
+          <div class="feature-icon">
+            <i class="fas fa-gamepad"></i>
+          </div>
+          <h3>Interactive Learning</h3>
+          <p>Engaging games and activities that make learning fun and help students retain information better.</p>
+        </div>
+        
+        <div class="feature-card fade-in-delay-2">
+          <div class="feature-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h3>EnzoBot Assistant</h3>
+          <p>An AI companion that guides students through their learning journey, providing personalized support.</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>Progress Tracking</h3>
+          <p>Monitor learning progress with detailed analytics and personalized reports.</p>
+        </div>
+        
+        <div class="feature-card fade-in-delay-1">
+          <div class="feature-icon">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <h3>Personalized Learning</h3>
+          <p>Adaptive content that adjusts to each student's learning pace and style.</p>
+        </div>
+        
+        <div class="feature-card fade-in-delay-2">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Community Support</h3>
+          <p>Connect with other students and educators to share experiences and resources.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning Tools Section -->
+  <section id="tools" class="tools-section">
+    <div class="container">
+      <h2 class="fade-in">Learning Tools</h2>
+      <p style="text-align: center;">Explore our range of interactive tools designed to make learning engaging and effective.</p>
+      
+      <div class="tools-flex">
+        <div class="tool-card fade-in" onclick="location.href='games/memory.html'">
+          <div class="tool-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>Memory Game</h3>
+        </div>
+        
+        <div class="tool-card fade-in-delay-1" onclick="location.href='games/shape-sorting.html'">
+          <div class="tool-icon">
+            <i class="fas fa-shapes"></i>
+          </div>
+          <h3>Shape Sorting</h3>
+        </div>
+        
+        <div class="tool-card fade-in-delay-2" onclick="location.href='games/pattern-completion.html'">
+          <div class="tool-icon">
+            <i class="fas fa-puzzle-piece"></i>
+          </div>
+          <h3>Pattern Completion</h3>
+        </div>
+        
+        <div class="tool-card fade-in" onclick="location.href='games/coloring-book.html'">
+          <div class="tool-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3>Coloring Book</h3>
+        </div>
+        
+        <div class="tool-card fade-in-delay-1" onclick="location.href='quiz.html'">
+          <div class="tool-icon">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <h3>Quiz</h3>
+        </div>
+        
+        <div class="tool-card fade-in-delay-2" onclick="location.href='flashcards.html'">
+          <div class="tool-icon">
+            <i class="fas fa-copy"></i>
+          </div>
+          <h3>Flashcards</h3>
+        </div>
+        
+        <div class="tool-card fade-in" onclick="location.href='games/alphabet.html'">
+          <div class="tool-icon">
+            <i class="fas fa-font"></i>
+          </div>
+          <h3>Alphabet Learning</h3>
+        </div>
+        
+        <!-- Add Word Formation Game Card -->
+        <div class="tool-card fade-in-delay-1" onclick="location.href='games/wordformation.html'">
+          <div class="tool-icon">
+            <i class="fas fa-spell-check"></i>
+          </div>
+          <h3>Word Formation</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-image fade-in">
+          <img src="logo.png" alt="About Enzo Learn" id="about-img">
+        </div>
+        <div class="about-text fade-in-delay-1">
+          <h2>About Enzo Learn</h2>
+          <p>Enzo Learn is a vibrant and inclusive learning platform built for students with diverse learning needs. Our mission is to make education accessible and enjoyable for everyone.</p>
+          <p>We believe that every student deserves the opportunity to learn in a way that suits their individual needs and abilities. That's why we've created a platform that adapts to different learning styles and provides a supportive environment for growth.</p>
+          <p>Meet EnzoBot, your friendly AI companion, always ready to guide you through your learning journey!</p>
+          <a href="#tools" class="btn">Explore Our Tools</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="team-section">
+    <div class="container">
+      <h2 class="fade-in">Meet Our Team</h2>
+      <!-- <p class="fade-in">The dedicated professionals behind Enzo Learn.</p> -->
+      
+      <div class="team-grid">
+        <div class="team-member fade-in">
+          <div class="team-member-image">VP</div>
+          <h3>Vishnu Prasad B</h3>
+          <p>Lead Developer</p>
+        </div>
+        
+        <div class="team-member fade-in-delay-1">
+          <div class="team-member-image">DV</div>
+          <h3>Vanshika</h3>
+          <p>UX Designer</p>
+        </div>
+        
+        <div class="team-member fade-in-delay-2">
+          <div class="team-member-image">AK</div>
+          <h3>Akzib</h3>
+          <p>Frontend Dev</p>
+        </div>
+        
+        <div class="team-member fade-in">
+          <div class="team-member-image">AA</div>
+          <h3>Anna Aiswarya</h3>
+          <p>Backend Dev</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="logo">
+        <h1 class="logo-text" style="color: white;">Enzo Learn</h1>
+      </div>
+      <div class="footer-links">
+        <a href="#welcome">Home</a>
+        <a href="#features">Features</a>
+        <a href="#tools">Learning Tools</a>
+        <a href="#about">About</a>
+        <a href="#team">Team</a>
+      </div>
+      <div class="copyright">
+        &copy; 2025 Enzo Learn. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Loading Animation
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('loader');
+      loader.classList.add('hidden');
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 500);
+    });
+    
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+    
+    // Fade-in Animation on Scroll
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.fade-in, .fade-in-delay-1, .fade-in-delay-2').forEach(element => {
+      observer.observe(element);
+    });
+    
+    // EnzoBot Chat Functionality
+    const enzoBotButton = document.getElementById('enzobot-button');
+    const botChat = document.getElementById('bot-chat');
+    const botClose = document.getElementById('bot-close');
+    const botMessages = document.getElementById('bot-messages');
+    const botInput = document.getElementById('bot-input-field');
+    const botSend = document.getElementById('bot-send');
+    
+    // Open chat
+    enzoBotButton.addEventListener('click', () => {
+      botChat.classList.add('active');
+      if (botMessages.children.length === 0) {
+        addBotMessage("Hi there! I'm EnzoBot, your learning assistant. How can I help you today?");
+      }
+    });
+    
+    // Close chat
+    botClose.addEventListener('click', () => {
+      botChat.classList.remove('active');
+    });
+    
+    // Send message
+    function sendMessage() {
+      const message = botInput.value.trim();
+      if (message) {
+        addUserMessage(message);
+        botInput.value = '';
+        
+        // Simple bot responses
+        setTimeout(() => {
+          handleBotResponse(message);
+        }, 600);
+      }
+    }
+    
+    botSend.addEventListener('click', sendMessage);
+    botInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    function addBotMessage(text) {
+      const message = document.createElement('div');
+      message.className = 'message bot-message';
+      message.textContent = text;
+      botMessages.appendChild(message);
+      botMessages.scrollTop = botMessages.scrollHeight;
+    }
+    
+    function addUserMessage(text) {
+      const message = document.createElement('div');
+      message.className = 'message user-message';
+      message.textContent = text;
+      botMessages.appendChild(message);
+      botMessages.scrollTop = botMessages.scrollHeight;
+    }
+    
+    function handleBotResponse(message) {
+  const lowerMessage = message.toLowerCase();
+  
+  if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+    addBotMessage("Hello! How can I help you with your learning today?");
+  } 
+  else if (lowerMessage.includes('help')) {
+    addBotMessage("I can help you navigate our learning tools, explain how games work, or answer questions about the platform. What would you like to know?");
+  }
+  else if (lowerMessage.includes('memory') || lowerMessage.includes('shape') || 
+           lowerMessage.includes('pattern') || lowerMessage.includes('coloring') || 
+           lowerMessage.includes('quiz') || lowerMessage.includes('flashcard') || 
+           lowerMessage.includes('alphabet') || lowerMessage.includes('word formation')) {
+    addBotMessage("You can find this game in our Learning Tools section. Check it out to start playing and learning!");
+  }
+  else if (lowerMessage.includes('word') || lowerMessage.includes('formation')) {
+    addBotMessage("The Word Formation game helps you improve spelling and vocabulary. You can find it in our Learning Tools section. Would you like to try it now?");
+  }
+  else if (lowerMessage.includes('game')) {
+    addBotMessage("We have many interactive games like Memory Game, Shape Sorting, Pattern Completion, and Word Formation. You can find all of them in our Learning Tools section!");
+  }
+  else if (lowerMessage.includes('learn') || lowerMessage.includes('learning')) {
+    addBotMessage("Enzo Learn offers various tools to make learning fun and accessible. Check out our Learning Tools section for games and activities!");
+  }
+  else if (lowerMessage.includes('thank')) {
+    addBotMessage("You're welcome! Happy learning!");
+  }
+  else {
+    addBotMessage("I'm here to help with your learning journey. You can ask me about our games, tools, or how to use the platform!");
+  }
+}
+
+  </script>
+</body>
+</html>

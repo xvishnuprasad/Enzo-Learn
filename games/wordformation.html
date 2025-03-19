@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Formation Game - Enzo Learn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #87CEEB;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        
+        header {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin: 0;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .word-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .slot {
+            width: 60px;
+            height: 60px;
+            background-color: #FFD700;
+            border: 2px dashed white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .letters {
+            display: flex;
+            gap: 10px;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .letter {
+            width: 60px;
+            height: 60px;
+            background-color: #FF5733;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: grab;
+        }
+        
+        #message {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            min-height: 30px;
+        }
+        
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            background-color: #32CD32;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #228B22;
+        }
+        
+        .instructions {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 18px;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Word Formation Game</h1>
+    </header>
+    
+    <div class="instructions">
+        <p>Drag and drop the letters to form the word. Each letter belongs to a specific position.</p>
+    </div>
+    
+    <div class="game-container">
+        <div class="word-container" id="word-container"></div>
+        <div class="letters" id="letters-container"></div>
+    </div>
+    
+    <p id="message"></p>
+    <button id="next-round" onclick="startNewRound()" style="display: none;">Next Round</button>
+
+    <script>
+        const words = ["APPLE", "HOUSE", "PLANT", "MUSIC", "WATER", "LEARN", "CHILD", "HAPPY", "SMART", "SKILL", "LEMON", "BOTTLE", "ANIMAL", "BISCUIT", "SNACKS", "ENCYCLOPEDIA"];
+        let selectedWord = "";
+        const wordContainer = document.getElementById("word-container");
+        const lettersContainer = document.getElementById("letters-container");
+        const message = document.getElementById("message");
+        const nextRoundButton = document.getElementById("next-round");
+        let correctMatches = 0;
+
+        function startNewRound() {
+            wordContainer.innerHTML = "";
+            lettersContainer.innerHTML = "";
+            message.textContent = "";
+            nextRoundButton.style.display = "none";
+            correctMatches = 0;
+            selectedWord = words[Math.floor(Math.random() * words.length)];
+            generateGame(selectedWord);
+        }
+
+        function generateGame(word) {
+            word.split("").forEach(letter => {
+                const slot = document.createElement("div");
+                slot.classList.add("slot");
+                slot.dataset.letter = letter;
+                slot.textContent = "_";
+                wordContainer.appendChild(slot);
+            });
+
+            let shuffledLetters = word.split("").sort(() => Math.random() - 0.5);
+            shuffledLetters.forEach(letter => {
+                const letterDiv = document.createElement("div");
+                letterDiv.classList.add("letter");
+                letterDiv.textContent = letter;
+                letterDiv.setAttribute("draggable", "true");
+                letterDiv.setAttribute("id", letter + "-" + Math.random().toString(36).substr(2, 5)); // Unique ID for each letter
+                letterDiv.addEventListener("dragstart", (event) => {
+                    event.dataTransfer.setData("text", event.target.textContent);
+                });
+                lettersContainer.appendChild(letterDiv);
+            });
+
+            document.querySelectorAll(".slot").forEach(slot => {
+                slot.addEventListener("dragover", (event) => {
+                    event.preventDefault();
+                });
+                slot.addEventListener("drop", (event) => {
+                    event.preventDefault();
+                    const draggedLetter = event.dataTransfer.getData("text");
+                    if (draggedLetter === slot.dataset.letter && slot.textContent === "_") {
+                        slot.textContent = draggedLetter;
+                        slot.style.backgroundColor = "#32CD32";
+                        correctMatches++;
+                        
+                        // Find and remove the used letter from the letters container
+                        const letters = document.querySelectorAll(".letter");
+                        for (let i = 0; i < letters.length; i++) {
+                            if (letters[i].textContent === draggedLetter) {
+                                letters[i].remove();
+                                break;
+                            }
+                        }
+                        
+                        if (correctMatches === word.length) {
+                            message.textContent = `Great job! You formed the word '${word}'!`;
+                            nextRoundButton.style.display = "block";
+                        }
+                    } else {
+                        message.textContent = "Try again!";
+                        setTimeout(() => {
+                            message.textContent = "";
+                        }, 1500);
+                    }
+                });
+            });
+        }
+
+        // Start the game when the page loads
+        startNewRound();
+    </script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Coloring Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #607d8b;
+            font-size: 2.5rem;
+            margin-bottom: 0;
+        }
+        
+        h2 {
+            color: #c77b58;
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            border: 2px solid #333;
+            transform: scale(1.1);
+        }
+        
+        .drawing-area {
+            border: 1px solid #ddd;
+            background-color: white;
+            width: 100%;
+            height: 500px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .colorable {
+            fill: white;
+            stroke: #333;
+            stroke-width: 1.5;
+            cursor: pointer;
+            transition: fill 0.2s;
+        }
+        
+        .colorable:hover {
+            opacity: 0.8;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        button {
+            background-color: #607d8b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #4b626d;
+        }
+        
+        .drawing-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .drawing-option {
+            padding: 8px 15px;
+            background-color: #e9e9e9;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .drawing-option:hover {
+            background-color: #d9d9d9;
+        }
+        
+        .drawing-option.selected {
+            background-color: #c77b58;
+            color: white;
+        }
+        
+        .back-button {
+            align-self: flex-start;
+            margin-bottom: 20px;
+            background-color: transparent;
+            color: #607d8b;
+            padding: 5px 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #607d8b;
+        }
+        
+        .back-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .semi-circle-pattern {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .semi-circle-container {
+            display: flex;
+            flex-wrap: nowrap;
+            animation: scroll 30s linear infinite;
+        }
+        
+        .semi-circle-group {
+            display: flex;
+            flex-shrink: 0;
+        }
+        
+        .semi-circle {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+        
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="semi-circle-pattern">
+        <div class="semi-circle-container" id="patternTop">
+            <!-- Pattern will be generated by JavaScript -->
+        </div>
+    </div>
+    
+    <header>
+        <h1>INTERACTIVE COLORING BOOK</h1>
+        <h2>CHOOSE YOUR COLORS AND BRING DRAWINGS TO LIFE!</h2>
+    </header>
+    
+    <div class="container">
+        <a href="#" class="back-button" id="backButton">⬅ Back to Home</a>
+        
+        <div class="drawing-selector" id="drawingSelector">
+            <div class="drawing-option selected" data-drawing="shapes">Geometric Shapes</div>
+            <div class="drawing-option" data-drawing="landscape">Landscape</div>
+            <div class="drawing-option" data-drawing="animal">Animal</div>
+            <div class="drawing-option" data-drawing="abstract">Abstract</div>
+        </div>
+        
+        <div class="color-palette" id="colorPalette">
+            <!-- Colors will be generated by JavaScript -->
+        </div>
+        
+        <div class="drawing-area" id="drawingArea">
+            <!-- SVG will be inserted here -->
+        </div>
+        
+        <div class="controls">
+            <button id="resetButton">Reset Colors</button>
+            <button id="downloadButton">Download Artwork</button>
+            <button id="newDrawingButton">New Drawing</button>
+        </div>
+    </div>
+    
+    <div class="semi-circle-pattern">
+        <div class="semi-circle-container" id="patternBottom">
+            <!-- Pattern will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create colors for palette
+            const colors = [
+                '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#1abc9c', 
+                '#3498db', '#9b59b6', '#34495e', '#7f8c8d', '#d35400',
+                '#c0392b', '#16a085', '#27ae60', '#2980b9', '#8e44ad',
+                '#2c3e50', '#bdc3c7', '#95a5a6', '#ffffff', '#000000'
+            ];
+            
+            let currentColor = colors[0];
+            let currentDrawing = 'shapes';
+            
+            // Generate color palette
+            const colorPalette = document.getElementById('colorPalette');
+            colors.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = 'color-option';
+                colorOption.style.backgroundColor = color;
+                colorOption.dataset.color = color;
+                colorPalette.appendChild(colorOption);
+                
+                colorOption.addEventListener('click', function() {
+                    currentColor = this.dataset.color;
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Set first color as selected
+            document.querySelector('.color-option').classList.add('selected');
+            
+            // Generate semi-circle patterns
+            function generatePatterns() {
+                const patternColors = ['#d4a991', '#607d8b', '#c77b58', '#d2d2d2'];
+                const patternContainers = [document.getElementById('patternTop'), document.getElementById('patternBottom')];
+                
+                patternContainers.forEach(container => {
+                    // Create 2 groups for infinite scrolling
+                    for (let g = 0; g < 2; g++) {
+                        const group = document.createElement('div');
+                        group.className = 'semi-circle-group';
+                        
+                        // Create 10 sets of patterns in each group
+                        for (let i = 0; i < 10; i++) {
+                            for (let j = 0; j < patternColors.length; j++) {
+                                const semiCircle = document.createElement('div');
+                                semiCircle.className = 'semi-circle';
+                                
+                                // Alternate between left and right semi-circles
+                                if (j % 2 === 0) {
+                                    semiCircle.style.borderRadius = '0 0 100px 0';
+                                } else {
+                                    semiCircle.style.borderRadius = '100px 0 0 0';
+                                }
+                                
+                                semiCircle.style.backgroundColor = patternColors[j];
+                                group.appendChild(semiCircle);
+                            }
+                        }
+                        
+                        container.appendChild(group);
+                    }
+                });
+            }
+            
+            generatePatterns();
+            
+            // SVG Drawing templates
+            const drawings = {
+                shapes: `
+                    <svg viewBox="0 0 500 500">
+                        <circle cx="150" cy="150" r="70" class="colorable" data-original-fill="white" />
+                        <rect x="250" y="80" width="140" height="140" class="colorable" data-original-fill="white" />
+                        <polygon points="150,300 220,400 80,400" class="colorable" data-original-fill="white" />
+                        <polygon points="300,300 370,300 370,400 300,400" class="colorable" data-original-fill="white" />
+                        <ellipse cx="370" cy="180" rx="40" ry="60" class="colorable" data-original-fill="white" />
+                    </svg>
+                `,
+                landscape: `
+                    <svg viewBox="0 0 500 500">
+                        <rect x="0" y="0" width="500" height="300" class="colorable" data-original-fill="white" />
+                        <polygon points="0,300 150,150 300,250 500,180 500,300" class="colorable" data-original-fill="white" />
+                        <circle cx="400" cy="80" r="40" class="colorable" data-original-fill="white" />
+                        <polygon points="100,300 175,200 250,300" class="colorable" data-original-fill="white" />
+                        <polygon points="300,300 350,250 400,300" class="colorable" data-original-fill="white" />
+                        <rect x="0" y="300" width="500" height="200" class="colorable" data-original-fill="white" />
+                    </svg>
+                `,
+                animal: `
+                    <svg viewBox="0 0 500 500">
+                        <ellipse cx="250" cy="220" rx="120" ry="100" class="colorable" data-original-fill="white" />
+                        <circle cx="200" cy="180" r="15" class="colorable" data-original-fill="white" />
+                        <circle cx="300" cy="180" r="15" class="colorable" data-original-fill="white" />
+                        <ellipse cx="250" cy="230" rx="20" ry="15" class="colorable" data-original-fill="white" />
+                        <path d="M175,150 Q185,120 150,130 L175,150" class="colorable" data-original-fill="white" />
+                        <path d="M325,150 Q315,120 350,130 L325,150" class="colorable" data-original-fill="white" />
+                        <path d="M220,270 Q250,290 280,270" class="colorable" stroke="#333" stroke-width="3" fill="none" />
+                    </svg>
+                `,
+                abstract: `
+                    <svg viewBox="0 0 500 500">
+                        <path d="M100,100 C150,50 250,50 300,100 S350,200 400,250 C350,300 250,350 200,300 S150,250 100,200 Z" class="colorable" data-original-fill="white" />
+                        <circle cx="150" cy="150" r="30" class="colorable" data-original-fill="white" />
+                        <circle cx="350" cy="350" r="30" class="colorable" data-original-fill="white" />
+                        <circle cx="150" cy="350" r="30" class="colorable" data-original-fill="white" />
+                        <circle cx="350" cy="150" r="30" class="colorable" data-original-fill="white" />
+                        <path d="M150,150 L350,350 M150,350 L350,150" class="colorable" stroke="#333" stroke-width="3" fill="none" />
+                    </svg>
+                `
+            };
+            
+            // Load initial drawing
+            loadDrawing(currentDrawing);
+            
+            // Drawing selector events
+            document.querySelectorAll('.drawing-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.drawing-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    currentDrawing = this.dataset.drawing;
+                    loadDrawing(currentDrawing);
+                });
+            });
+            
+            // Function to load drawing
+            function loadDrawing(drawingName) {
+                const drawingArea = document.getElementById('drawingArea');
+                drawingArea.innerHTML = drawings[drawingName];
+                
+                // Add click events to colorable elements
+                document.querySelectorAll('.colorable').forEach(element => {
+                    element.addEventListener('click', function() {
+                        this.style.fill = currentColor;
+                    });
+                });
+            }
+            
+            // Reset button
+            document.getElementById('resetButton').addEventListener('click', function() {
+                document.querySelectorAll('.colorable').forEach(element => {
+                    element.style.fill = element.dataset.originalFill || 'white';
+                });
+            });
+            
+            // New drawing button
+            document.getElementById('newDrawingButton').addEventListener('click', function() {
+                // Pick a random drawing that's not the current one
+                const drawingOptions = Object.keys(drawings).filter(key => key !== currentDrawing);
+                const randomDrawing = drawingOptions[Math.floor(Math.random() * drawingOptions.length)];
+                
+                currentDrawing = randomDrawing;
+                
+                // Update selected drawing option in UI
+                document.querySelectorAll('.drawing-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    if (opt.dataset.drawing === currentDrawing) {
+                        opt.classList.add('selected');
+                    }
+                });
+                
+                loadDrawing(currentDrawing);
+            });
+            
+            // Download button
+            document.getElementById('downloadButton').addEventListener('click', function() {
+                const svgData = document.querySelector('.drawing-area svg').outerHTML;
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const svgUrl = URL.createObjectURL(svgBlob);
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = svgUrl;
+                downloadLink.download = `coloring-book-${currentDrawing}.svg`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            });
+            
+            // Back button (just prevents default for the demo)
+            document.getElementById('backButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Back to Home functionality would be implemented here');
+            });
+        });
+    </script>
+</body>
+</html>

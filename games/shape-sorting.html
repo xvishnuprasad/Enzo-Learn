@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shape Sorting - Enzo Learn</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    /* Corner Rainbows */
+    .corner-rainbow {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      z-index: -1;
+    }
+
+    .top-left {
+      top: 0;
+      left: 0;
+    }
+
+    .bottom-right {
+      bottom: 0;
+      right: 0;
+      transform: rotate(180deg);
+    }
+
+    /* Game Container */
+    .game-container {
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 0 auto 30px;
+      max-width: 800px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      min-height: 500px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Score Display */
+    .score-display {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    /* Level Display */
+    .level-display {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    /* Shapes Area */
+    .shapes-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 40px;
+      min-height: 120px;
+    }
+
+    /* Outlines Area */
+    .outlines-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    /* Shape Styles */
+    .shape {
+      cursor: grab;
+      transition: transform 0.2s;
+      position: relative;
+      z-index: 10;
+      user-select: none;
+      width: 100px;
+      height: 100px;
+    }
+
+    .shape:hover {
+      transform: scale(1.05);
+    }
+
+    .shape:active {
+      cursor: grabbing;
+    }
+
+    /* Outline Styles */
+    .outline {
+      border: 3px dashed #888;
+      border-radius: 10px;
+      width: 104px;
+      height: 104px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Shape Faces */
+    .shape .face {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .shape .eyes {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 5px;
+    }
+
+    .shape .eye {
+      width: 12px;
+      height: 18px;
+      background-color: #000;
+      border-radius: 50%;
+    }
+
+    .shape .mouth {
+      width: 30px;
+      height: 15px;
+      border-bottom: 3px solid #000;
+      border-radius: 0 0 10px 10px;
+    }
+
+    /* Success Animation */
+    @keyframes success {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .success {
+      animation: success 0.5s ease;
+    }
+
+    /* Message Box */
+    .message-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border: 5px solid #4CAF50;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      display: none;
+    }
+
+    .message-box h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #4CAF50;
+    }
+
+    .message-box p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .message-box button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .message-box button:hover {
+      background-color: #388E3C;
+    }
+
+    /* Back Link */
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: #4CAF50;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 700px) {
+      .game-container {
+        padding: 15px;
+      }
+
+      .shapes-container, .outlines-container {
+        gap: 15px;
+      }
+
+      .shape, .outline {
+        width: 80px;
+        height: 80px;
+      }
+
+      .outline {
+        width: 84px;
+        height: 84px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .shape, .outline {
+        width: 70px;
+        height: 70px;
+      }
+
+      .outline {
+        width: 74px;
+        height: 74px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Controls Section */
+    .controls {
+      margin-top: 20px;
+    }
+
+    .btn {
+      background-color: #FF7043;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #E64A19;
+    }
+
+    /* Rainbow styling */
+    .rainbow-path {
+      fill: none;
+      stroke-width: 10;
+    }
+
+    .r1 { stroke: #4db6ac; }
+    .r2 { stroke: #ec407a; }
+    .r3 { stroke: #ff7043; }
+    .r4 { stroke: #ffd54f; }
+  </style>
+</head>
+<body>
+  <!-- Rainbow Decorations -->
+  <div class="corner-rainbow top-left">
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path class="rainbow-path r1" d="M10,110 A100,100 0 0,1 110,10"></path>
+      <path class="rainbow-path r2" d="M30,110 A80,80 0 0,1 110,30"></path>
+      <path class="rainbow-path r3" d="M50,110 A60,60 0 0,1 110,50"></path>
+      <path class="rainbow-path r4" d="M70,110 A40,40 0 0,1 110,70"></path>
+    </svg>
+  </div>
+  
+  <div class="corner-rainbow bottom-right">
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path class="rainbow-path r1" d="M10,110 A100,100 0 0,1 110,10"></path>
+      <path class="rainbow-path r2" d="M30,110 A80,80 0 0,1 110,30"></path>
+      <path class="rainbow-path r3" d="M50,110 A60,60 0 0,1 110,50"></path>
+      <path class="rainbow-path r4" d="M70,110 A40,40 0 0,1 110,70"></path>
+    </svg>
+  </div>
+
+  <h1>Shape Sorting Game</h1>
+  <p>Drag and drop the shapes to their matching outlines!</p>
+
+  <div class="game-container">
+    <div class="score-display">Score: <span id="score">0</span></div>
+    <div class="level-display">Level: <span id="level">1</span></div>
+    
+    <div class="shapes-container" id="shapes-container"></div>
+    <div class="outlines-container" id="outlines-container"></div>
+    
+    <div class="message-box" id="level-complete">
+      <h2>Level Complete!</h2>
+      <p>Great job! You matched all the shapes!</p>
+      <p>Your score: <span id="final-score">0</span></p>
+      <button id="next-level">Next Level</button>
+    </div>
+    
+    <div class="message-box" id="game-complete">
+      <h2>Game Complete!</h2>
+      <p>Amazing! You've completed all levels!</p>
+      <p>Final score: <span id="game-final-score">0</span></p>
+      <button id="restart-game">Play Again</button>
+    </div>
+    
+    <div class="controls">
+      <button class="btn" id="reset-level">Reset Level</button>
+      <button class="btn" id="help-button">Help</button>
+    </div>
+  </div>
+
+  <a href="../index.html">⬅ Back to Home</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Game elements
+      const shapesContainer = document.getElementById('shapes-container');
+      const outlinesContainer = document.getElementById('outlines-container');
+      const scoreElement = document.getElementById('score');
+      const levelElement = document.getElementById('level');
+      const levelCompleteBox = document.getElementById('level-complete');
+      const gameCompleteBox = document.getElementById('game-complete');
+      const finalScoreElement = document.getElementById('final-score');
+      const gameFinalScoreElement = document.getElementById('game-final-score');
+      const nextLevelButton = document.getElementById('next-level');
+      const restartButton = document.getElementById('restart-game');
+      const resetLevelButton = document.getElementById('reset-level');
+      const helpButton = document.getElementById('help-button');
+      
+      // Game variables
+      let currentLevel = 1;
+      let score = 0;
+      let matchedShapes = 0;
+      let totalShapes = 0;
+      let isDragging = false;
+      let currentShape = null;
+      let offsetX = 0;
+      let offsetY = 0;
+      let helpModeActive = false;
+      
+      // Shape definitions
+      const shapesDefinitions = {
+        circle: {
+          svg: '<svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#FF5722"/></svg>',
+          outlineSvg: '<svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"/></svg>'
+        },
+        square: {
+          svg: '<svg width="100" height="100" viewBox="0 0 100 100"><rect x="5" y="5" width="90" height="90" fill="#FFC107"/></svg>',
+          outlineSvg: '<svg width="100" height="100" viewBox="0 0 100 100"><rect x="5" y="5" width="90" height="90" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"/></svg>'
+        },
+        triangle: {
+          svg: '<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#4DB6AC"/></svg>',
+          outlineSvg: '<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"/></svg>'
+        },
+        star: {
+          svg: '<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,10 61,38 90,38 67,58 76,85 50,70 24,85 33,58 10,38 39,38" fill="#EC407A"/></svg>',
+          outlineSvg: '<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,10 61,38 90,38 67,58 76,85 50,70 24,85 33,58 10,38 39,38" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"/></svg>'
+        },
+        hexagon: {
+          svg: '<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="#7E57C2"/></svg>',
+          outlineSvg: '<svg width="100" height="100" viewBox="0 0 100 100"><polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"/></svg>'
+        },
+        heart: {
+          svg: '<svg width="100" height="100" viewBox="0 0 100 100"><path d="M50,30 C60,10 90,10 90,40 C90,65 50,90 50,90 C50,90 10,65 10,40 C10,10 40,10 50,30 Z" fill="#E91E63"/></svg>',
+          outlineSvg: '<svg width="100" height="100" viewBox="0 0 100 100"><path d="M50,30 C60,10 90,10 90,40 C90,65 50,90 50,90 C50,90 10,65 10,40 C10,10 40,10 50,30 Z" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5,5"/></svg>'
+        }
+      };
+      
+      // Level definitions
+      const levels = [
+        { shapes: ['circle', 'square', 'triangle'], timeLimit: 60 },
+        { shapes: ['circle', 'square', 'triangle', 'star'], timeLimit: 60 },
+        { shapes: ['circle', 'square', 'triangle', 'star', 'hexagon'], timeLimit: 60 },
+        { shapes: ['circle', 'square', 'triangle', 'star', 'hexagon', 'heart'], timeLimit: 60 }
+      ];
+      
+      // Initialize game
+      function initGame() {
+        resetGame();
+        loadLevel(currentLevel);
+      }
+      
+      // Reset game to initial state
+      function resetGame() {
+        currentLevel = 1;
+        score = 0;
+        updateScore();
+        updateLevel();
+      }
+      
+      // Load a specific level
+      function loadLevel(level) {
+        // Clear containers
+        shapesContainer.innerHTML = '';
+        outlinesContainer.innerHTML = '';
+        
+        // Reset counters
+        matchedShapes = 0;
+        
+        // Get level configuration
+        const levelConfig = levels[level - 1];
+        if (!levelConfig) {
+          gameComplete();
+          return;
+        }
+        
+        // Set total shapes
+        totalShapes = levelConfig.shapes.length;
+        
+        // Create shapes and outlines
+        const shapes = [...levelConfig.shapes];
+        const shuffledShapes = shuffleArray([...shapes]);
+        
+        // Create outline elements
+        shapes.forEach(shape => {
+          const outline = createOutline(shape);
+          outlinesContainer.appendChild(outline);
+        });
+        
+        // Create draggable shape elements
+        shuffledShapes.forEach(shape => {
+          const shapeElement = createShape(shape);
+          shapesContainer.appendChild(shapeElement);
+        });
+        
+        // Update level display
+        updateLevel();
+      }
+      
+      // Create a shape element
+      function createShape(shapeType) {
+        const shape = document.createElement('div');
+        shape.className = 'shape';
+        shape.dataset.type = shapeType;
+        
+        // Add shape SVG
+        shape.innerHTML = shapesDefinitions[shapeType].svg;
+        
+        // Add face elements
+        const face = document.createElement('div');
+        face.className = 'face';
+        
+        const eyes = document.createElement('div');
+        eyes.className = 'eyes';
+        
+        const leftEye = document.createElement('div');
+        leftEye.className = 'eye';
+        
+        const rightEye = document.createElement('div');
+        rightEye.className = 'eye';
+        
+        const mouth = document.createElement('div');
+        mouth.className = 'mouth';
+        
+        eyes.appendChild(leftEye);
+        eyes.appendChild(rightEye);
+        face.appendChild(eyes);
+        face.appendChild(mouth);
+        
+        shape.appendChild(face);
+        
+        // Make shape draggable
+        shape.addEventListener('mousedown', startDrag);
+        shape.addEventListener('touchstart', startDragTouch);
+        
+        return shape;
+      }
+      
+      // Create an outline element
+      function createOutline(shapeType) {
+        const outline = document.createElement('div');
+        outline.className = 'outline';
+        outline.dataset.type = shapeType;
+        
+        // Add outline SVG
+        outline.innerHTML = shapesDefinitions[shapeType].outlineSvg;
+        
+        return outline;
+      }
+      
+      // Start dragging (mouse)
+      function startDrag(e) {
+        e.preventDefault();
+        if (isDragging) return;
+        
+        isDragging = true;
+        currentShape = this;
+        
+        // Calculate the offset
+        const rect = currentShape.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        
+        // Add temporary event listeners
+        document.addEventListener('mousemove', dragShape);
+        document.addEventListener('mouseup', stopDrag);
+        
+        // Add dragging style
+        currentShape.style.zIndex = '100';
+        currentShape.style.opacity = '0.8';
+        currentShape.style.position = 'absolute';
+      }
+      
+      // Start dragging (touch)
+      function startDragTouch(e) {
+        e.preventDefault();
+        if (isDragging) return;
+        
+        isDragging = true;
+        currentShape = this;
+        
+        // Calculate the offset
+        const rect = currentShape.getBoundingClientRect();
+        const touch = e.touches[0];
+        offsetX = touch.clientX - rect.left;
+        offsetY = touch.clientY - rect.top;
+        
+        // Add temporary event listeners
+        document.addEventListener('touchmove', dragShapeTouch);
+        document.addEventListener('touchend', stopDragTouch);
+        
+        // Add dragging style
+        currentShape.style.zIndex = '100';
+        currentShape.style.opacity = '0.8';
+        currentShape.style.position = 'absolute';
+      }
+      
+      // Drag shape (mouse)
+      function dragShape(e) {
+        if (!isDragging) return;
+        
+        const gameContainerRect = document.querySelector('.game-container').getBoundingClientRect();
+        
+        // Update position
+        currentShape.style.left = (e.clientX - offsetX - gameContainerRect.left) + 'px';
+        currentShape.style.top = (e.clientY - offsetY - gameContainerRect.top) + 'px';
+      }
+      
+      // Drag shape (touch)
+      function dragShapeTouch(e) {
+        if (!isDragging) return;
+        
+        const touch = e.touches[0];
+        const gameContainerRect = document.querySelector('.game-container').getBoundingClientRect();
+        
+        // Update position
+        currentShape.style.left = (touch.clientX - offsetX - gameContainerRect.left) + 'px';
+        currentShape.style.top = (touch.clientY - offsetY - gameContainerRect.top) + 'px';
+      }
+      
+      // Stop dragging (mouse)
+      function stopDrag() {
+        if (!isDragging) return;
+        
+        // Remove event listeners
+        document.removeEventListener('mousemove', dragShape);
+        document.removeEventListener('mouseup', stopDrag);
+        
+        checkMatch();
+        
+        // Reset state
+        isDragging = false;
+        currentShape = null;
+      }
+      
+      // Stop dragging (touch)
+      function stopDragTouch() {
+        if (!isDragging) return;
+        
+        // Remove event listeners
+        document.removeEventListener('touchmove', dragShapeTouch);
+        document.removeEventListener('touchend', stopDragTouch);
+        
+        checkMatch();
+        
+        // Reset state
+        isDragging = false;
+        currentShape = null;
+      }
+      
+      // Check if shape matches any outline
+      function checkMatch() {
+        // Get all outlines
+        const outlines = document.querySelectorAll('.outline:not(.matched)');
+        let matched = false;
+        
+        outlines.forEach(outline => {
+          if (matched) return;
+          
+          // Check if shape type matches outline type
+          if (currentShape.dataset.type === outline.dataset.type) {
+            // Check if shape is over outline
+            const shapeRect = currentShape.getBoundingClientRect();
+            const outlineRect = outline.getBoundingClientRect();
+            
+            const shapeCenter = {
+              x: shapeRect.left + shapeRect.width / 2,
+              y: shapeRect.top + shapeRect.height / 2
+            };
+            
+            const outlineCenter = {
+              x: outlineRect.left + outlineRect.width / 2,
+              y: outlineRect.top + outlineRect.height / 2
+            };
+            
+            const distance = Math.sqrt(
+              Math.pow(shapeCenter.x - outlineCenter.x, 2) + 
+              Math.pow(shapeCenter.y - outlineCenter.y, 2)
+            );
+            
+            // If close enough, consider it a match
+            if (distance < 50) {
+              matchShape(currentShape, outline);
+              matched = true;
+            }
+          }
+        });
+        
+        // If not matched, return to original container
+        if (!matched) {
+          resetShapePosition(currentShape);
+        }
+      }
+      
+      // Match shape to outline
+      function matchShape(shape, outline) {
+        // Position shape in the center of the outline
+        const outlineRect = outline.getBoundingClientRect();
+        const gameContainerRect = document.querySelector('.game-container').getBoundingClientRect();
+        
+        shape.style.position = 'absolute';
+        shape.style.left = (outlineRect.left - gameContainerRect.left + (outlineRect.width - shape.offsetWidth) / 2) + 'px';
+        shape.style.top = (outlineRect.top - gameContainerRect.top + (outlineRect.height - shape.offsetHeight) / 2) + 'px';
+        shape.style.opacity = '1';
+        shape.style.zIndex = '5';
+        
+        // Mark as matched
+        shape.classList.add('matched');
+        outline.classList.add('matched');
+        
+        // Play animation
+        shape.classList.add('success');
+        setTimeout(() => {
+          shape.classList.remove('success');
+        }, 500);
+        
+        // Update game state
+        matchedShapes++;
+        score += 10;
+        updateScore();
+        
+        // Make shape non-draggable
+        shape.removeEventListener('mousedown', startDrag);
+        shape.removeEventListener('touchstart', startDragTouch);
+        
+        // Check if level is complete
+        if (matchedShapes === totalShapes) {
+          setTimeout(levelComplete, 1000);
+        }
+      }
+      
+      // Reset shape to original position
+      function resetShapePosition(shape) {
+        shape.style.position = '';
+        shape.style.left = '';
+        shape.style.top = '';
+        shape.style.opacity = '1';
+        shape.style.zIndex = '10';
+      }
+      
+      // Level complete
+      function levelComplete() {
+        // Add bonus points for completing level
+        score += 20;
+        updateScore();
+        
+        // Show completion message
+        finalScoreElement.textContent = score;
+        levelCompleteBox.style.display = 'block';
+      }
+      
+      // Game complete
+      function gameComplete() {
+        // Show game completion message
+        gameFinalScoreElement.textContent = score;
+        gameCompleteBox.style.display = 'block';
+      }
+      
+      // Update score display
+      function updateScore() {
+        scoreElement.textContent = score;
+      }
+      
+      // Update level display
+      function updateLevel() {
+        levelElement.textContent = currentLevel;
+      }
+      
+      // Shuffle array (Fisher-Yates algorithm)
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+      
+      // Help mode - briefly show matches
+      function activateHelp() {
+        if (helpModeActive) return;
+        
+        helpModeActive = true;
+        helpButton.disabled = true;
+        
+        const shapes = document.querySelectorAll('.shape:not(.matched)');
+        const outlines = document.querySelectorAll('.outline:not(.matched)');
+        
+        // Highlight matching shapes and outlines
+        shapes.forEach(shape => {
+          const type = shape.dataset.type;
+          const matchingOutline = Array.from(outlines).find(outline => outline.dataset.type === type);
+          
+          if (matchingOutline) {
+            shape.style.border = '3px solid #4CAF50';
+            matchingOutline.style.border = '3px solid #4CAF50';
+          }
+        });
+        
+        // Reset after 2 seconds
+        setTimeout(() => {
+          shapes.forEach(shape => {
+            shape.style.border = '';
+          });
+          
+          outlines.forEach(outline => {
+            outline.style.border = '3px dashed #888';
+          });
+          
+          helpModeActive = false;
+          helpButton.disabled = false;
+        }, 2000);
+        
+        // Deduct points for using help
+        score = Math.max(0, score - 5);
+        updateScore();
+      }
+      
+      // Event listeners for buttons
+      nextLevelButton.addEventListener('click', function() {
+        levelCompleteBox.style.display = 'none';
+        currentLevel++;
+        loadLevel(currentLevel);
+      });
+      
+      restartButton.addEventListener('click', function() {
+        gameCompleteBox.style.display = 'none';
+        initGame();
+      });
+      
+      resetLevelButton.addEventListener('click', function() {
+        loadLevel(currentLevel);
+      });
+      
+      helpButton.addEventListener('click', activateHelp);
+      
+      // Initialize the game
+      initGame();
+    });
+  </script>
+</body>
+</html>

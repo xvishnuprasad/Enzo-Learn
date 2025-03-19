@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnzoLearn - Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #e2f1ff 50%, #ddf4ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 118, 255, 0.1);
+            background: white;
+            position: relative;
+        }
+        
+        .illustration-side {
+            flex: 1;
+            background: linear-gradient(135deg, #7f7fd5 0%, #86a8e7 50%, #91eae4 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .illustration-side img {
+            width: 80%;
+            max-width: 400px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+        
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -80px;
+            right: -100px;
+        }
+        
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            left: -50px;
+        }
+        
+        .brand {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .brand h2 {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .brand p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        .form-side {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .form-side h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .form-side p {
+            color: #888;
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #eaeaea;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: #f9faff;
+        }
+        
+        .form-group input:focus {
+            border-color: #7f7fd5;
+            box-shadow: 0 0 0 3px rgba(127, 127, 213, 0.1);
+            outline: none;
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 24px;
+        }
+        
+        .forgot-password a {
+            color: #7f7fd5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .login-btn {
+            background: linear-gradient(to right, #7f7fd5, #86a8e7);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(127, 127, 213, 0.2);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(127, 127, 213, 0.25);
+        }
+        
+        .divider {
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eaeaea;
+        }
+        
+        .divider span {
+            padding: 0 15px;
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .signup-link span {
+            color: #888;
+            font-size: 15px;
+        }
+        
+        .signup-link a {
+            color: #7f7fd5;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        .error {
+            color: #ff4757;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .float-element {
+            position: absolute;
+            opacity: 0.2;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            animation: float 8s infinite ease-in-out;
+        }
+        
+        /* Enhanced Sliding Animation */
+        @keyframes slideOutToLeft {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes slideInFromRight {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .slide-out-left {
+            animation: slideOutToLeft 0.6s forwards cubic-bezier(0.65, 0.05, 0.36, 1);
+        }
+        
+        .slide-in-right {
+            animation: slideInFromRight 0.6s forwards cubic-bezier(0.65, 0.05, 0.36, 1);
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+        
+        /* Enhanced for mobile */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                max-width: 600px;
+            }
+            
+            .illustration-side {
+                display: none;
+            }
+            
+            .form-side {
+                padding: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="loginContainer">
+        <div class="illustration-side">
+            <div class="brand">
+                <div class="logo">
+                    <img src="logo.jpg" alt="EnzoLearn Logo" class="logo-img">
+                </div>
+                <h2>EnzoLearn</h2>
+            </div>
+            
+            <img src="image.jpg" alt="Child learning illustration">
+            
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            
+            <div class="floating-elements">
+                <div class="float-element" style="top: 15%; left: 20%; animation-delay: 0s;">A</div>
+                <div class="float-element" style="top: 25%; left: 75%; animation-delay: 1s;">B</div>
+                <div class="float-element" style="top: 60%; left: 15%; animation-delay: 2s;">C</div>
+                <div class="float-element" style="top: 80%; left: 65%; animation-delay: 3s;">1</div>
+                <div class="float-element" style="top: 40%; left: 85%; animation-delay: 4s;">2</div>
+                <div class="float-element" style="top: 70%; left: 35%; animation-delay: 5s;">3</div>
+            </div>
+        </div>
+        
+        <div class="form-side">
+            <div class="brand" style="position: relative; top: 0; left: 0; margin-bottom: 40px; display: flex;">
+                <div class="logo">
+                    <img src="logo.jpg" alt="EnzoLearn Logo" class="logo-img">
+                </div>
+                <h2 style="color: #7f7fd5;">EnzoLearn</h2>
+            </div>
+            
+            <h1>Welcome Back!</h1>
+            <p>Please log in to continue your child's learning journey</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="childName">Child's Name</label>
+                    <input type="text" id="childName" placeholder="Enter your child's name" required>
+                    <div class="error" id="nameError">Please enter your child's name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email address" required>
+                    <div class="error" id="emailError">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <div class="error" id="passwordError">Please enter your password</div>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="login-btn">Log In</button>
+                
+                <div class="signup-link">
+                    <span>Don't have an account?</span>
+                    <a id="goToSignup">Sign Up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBhWa4c86M1IaovK4yOny_s4xACdMhSLwM",
+  authDomain: "login-78d2d.firebaseapp.com",
+  projectId: "login-78d2d",
+  storageBucket: "login-78d2d.firebasestorage.app",
+  messagingSenderId: "1047593343440",
+  appId: "1:1047593343440:web:03b8fcf59be257b31001d5",
+  measurementId: "G-8Q2ZKLJLG1"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Form validation and submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const childName = document.getElementById('childName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Reset errors
+            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+            
+            // Validate form
+            let isValid = true;
+            
+            if (!childName) {
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!password) {
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Show loading state
+                const button = document.querySelector('.login-btn');
+                const originalText = button.textContent;
+                button.textContent = 'Logging In...';
+                button.disabled = true;
+                
+                // Sign in with email and password
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Verify child's name
+                        return db.collection('users').doc(userCredential.user.uid).get();
+                    })
+                    .then((doc) => {
+                        if (doc.exists && doc.data().childName === childName) {
+                            // Redirect to dashboard
+                            window.location.href = 'index.html';
+                        } else {
+                            button.textContent = originalText;
+                            button.disabled = false;
+                            alert("Child's name doesn't match our records");
+                            auth.signOut();
+                        }
+                    })
+                    .catch((error) => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                        alert('Error: ' + error.message);
+                    });
+            }
+        });
+
+        // Enhanced sliding animation to signup
+        document.getElementById('goToSignup').addEventListener('click', function() {
+            const container = document.getElementById('loginContainer');
+            container.classList.add('slide-out-left');
+            
+            setTimeout(() => {
+                sessionStorage.setItem('comingFromLogin', 'true');
+                window.location.href = 'signup.html';
+            }, 500);
+        });
+
+        // Check if we're coming from signup page
+        window.onload = function() {
+            if (sessionStorage.getItem('comingFromSignup')) {
+                const container = document.getElementById('loginContainer');
+                container.classList.add('slide-in-right');
+                sessionStorage.removeItem('comingFromSignup');
+            }
+        };
+    </script>
+</body>
+</html>

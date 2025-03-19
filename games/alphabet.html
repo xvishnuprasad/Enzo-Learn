@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chalkboard Alphabet Matching</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #222;
+            font-family: 'Comic Sans MS', 'Chalkduster', cursive;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chalkboard {
+            max-width: 900px;
+            width: 90%;
+            background-color: #2a2a2a;
+            border: 15px solid #5e4b36;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Chalk texture effect */
+        .chalkboard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c4S8GZAAAC3UlEQVRIiY1WiZKjIBBFURAQFDye//+lC4mJicZJzVRNtcgrbx0dB8d535aHo4DnCgjs+L6HAPKhCAAIcIDFbV0E0BcBEYCiQHZ3EyDKJ4gzcbsQV08wr4Wt66ragiAMVxEk8zYQMZ6WZXk+V3mcxH6MJzEsRd7zEmbKQYR4zPOvw19jmP+6SFwxsI3/slgEx7kdB9rH4ZjnIYdRJiJlxJU9fALpXx+GY6LHqJWJWCSsn5AQIf1ZB74L+bA9JqEgQviBCOkPbI9JbXhEvCNaGh7XXfjDNvwnpFYYYrLdRjRdcGOrCQ+I88YYJZZ1FdFw8YRU4gbpJkJKVIiIUGLgJRL5hJI7pMDhc5KzB8Q/0PB9SxV2SNcds42KxMM3SMXtW2rKITuWEfEP9GxYJ6QJEM0nBufYK2JwF7G9J0QrTGQA0dKxg9gQo0y8mCKUcELUNuKEOJYR6SO2JcSbjBA/EXuuiKV/QESR3m0jltURK0R0hbhtxNYMIpoS2YhN0esMiCFiGxG3iTH2EUeVsb31ickIuY4UrRBHJxFHtWO/HH4ZIY5O30hFRGuitj6Ih1JNSAg5IrKP2EZE0xQhaqw6YqkyYhuRgXQ3EaMl6oilftsHCQ5I8yrKIMpGbMdxNEtsI7YkdgOilUdXEVeZ/cZEpzCDqHjw50WMDT0iWmGs7zYi0vGImO80LCFaM2XEenSKiGJmEGFE2B+QYUSEEaFFRF+TP04QbUSCJaQfEbU3IZ1AxAhcRPSw/NcLREyUEHlPRLIQYUS6DkjRRozPYbYRI3L8CrH2IhXErEsctZOIDN2EmLuNESG6akK0Pij5o4eIOmdEGUS0N3KGkOf7QkR7Yzs+ISLGuh8R+SOiGm4ioGLfuCGiUngnlPwREXZHD4gIdCu9X5gRsOQPEDEFVRDIH0g3I6IYPSIi+vqA1IWmPCNWKSPHAnccF4h38FsXUfIXqFi+Iqzy/PFrD8a0RzxzgQkE8f8BExJATKQXnq8AAAAASUVORK5CYII=");
+            opacity: 0.05;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #fff;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Chalkduster', 'Comic Sans MS', cursive;
+        }
+
+        .subtitle {
+            font-size: 22px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .game-container {
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .matching-area {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 120px;
+        }
+
+        .column-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcd45;
+            text-align: center;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+        .letter, .target {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        /* Chalk effect for letters */
+        .letter, .target {
+            color: white;
+            text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .letter {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: grab;
+        }
+
+        .letter:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .target {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .target.matched {
+            background-color: rgba(152, 251, 152, 0.2);
+            border: 2px solid rgba(152, 251, 152, 0.4);
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 28px;
+            min-height: 40px;
+            padding: 10px;
+            color: white;
+        }
+
+        .success {
+            color: #98fb98 !important;
+        }
+
+        .error {
+            color: #ff6b6b !important;
+        }
+
+        #next-round {
+            display: none;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        #next-round:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .score-display {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(255, 215, 0, 0.2);
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffcd45;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        /* Chalk Drawings */
+        .chalk-drawing {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .drawing-book {
+            top: 20px;
+            right: 40px;
+            width: 80px;
+            height: 60px;
+        }
+
+        .drawing-rocket {
+            top: 30px;
+            left: 70px;
+            width: 70px;
+            height: 70px;
+        }
+
+        .drawing-globe {
+            bottom: 40px;
+            left: 50px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .drawing-lightbulb {
+            top: 40px;
+            right: 60px;
+            width: 60px;
+            height: 80px;
+        }
+
+        .drawing-clock {
+            bottom: 50px;
+            right: 80px;
+            width: 70px;
+            height: 70px;
+        }
+
+        .drawing-paper-plane {
+            top: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+        }
+
+        .drawing-ruler {
+            bottom: 30px;
+            left: 180px;
+            width: 100px;
+            height: 40px;
+        }
+
+        .eraser-mark {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .matching-area {
+                flex-direction: column;
+                align-items: center;
+            }
+            .letter, .target {
+                width: 80px;
+                height: 80px;
+                font-size: 36px;
+            }
+            h1 {
+                font-size: 36px;
+            }
+            .subtitle {
+                font-size: 18px;
+            }
+            .drawing-book, .drawing-globe, .drawing-ruler {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chalkboard">
+        <!-- Chalk Drawings -->
+        <div class="chalk-drawing drawing-book">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#ffaacc" stroke-width="2">
+                <path d="M20,30 L80,30 L80,80 L20,80 Z" />
+                <path d="M50,30 L50,80" />
+                <path d="M30,40 L40,40" />
+                <path d="M30,50 L40,50" />
+                <path d="M30,60 L40,60" />
+                <path d="M60,40 L70,40" />
+                <path d="M60,50 L70,50" />
+                <path d="M60,60 L70,60" />
+            </svg>
+        </div>
+        
+        <div class="chalk-drawing drawing-rocket">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#66ff66" stroke-width="2">
+                <path d="M50,10 C70,20 70,40 50,60 C30,40 30,20 50,10 Z" />
+                <path d="M40,60 L40,80 L50,70 L60,80 L60,60" />
+                <path d="M45,30 A5,5 0 0 1 55,30 A5,5 0 0 1 45,30" />
+            </svg>
+        </div>
+        
+        <div class="chalk-drawing drawing-lightbulb">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#ffdd55" stroke-width="2">
+                <path d="M50,20 C65,20 75,35 70,50 C65,60 60,65 60,75 L40,75 C40,65 35,60 30,50 C25,35 35,20 50,20 Z" />
+                <path d="M40,85 L60,85" />
+                <path d="M45,95 L55,95" />
+                <path d="M42,30 L58,30" />
+                <path d="M40,40 L60,40" />
+                <path d="M40,50 L60,50" />
+            </svg>
+        </div>
+        
+        <div class="chalk-drawing drawing-globe">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#66ccff" stroke-width="2">
+                <circle cx="50" cy="50" r="30" />
+                <path d="M50,20 L50,80" />
+                <path d="M20,50 L80,50" />
+                <path d="M25,30 C35,40 65,40 75,30" />
+                <path d="M25,70 C35,60 65,60 75,70" />
+            </svg>
+        </div>
+        
+        <div class="chalk-drawing drawing-clock">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#ff99cc" stroke-width="2">
+                <circle cx="50" cy="50" r="30" />
+                <path d="M50,30 L50,50 L70,50" />
+                <path d="M50,20 L50,25" />
+                <path d="M80,50 L75,50" />
+                <path d="M50,80 L50,75" />
+                <path d="M20,50 L25,50" />
+            </svg>
+        </div>
+        
+        <div class="chalk-drawing drawing-paper-plane">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#ffff66" stroke-width="2">
+                <path d="M10,40 L90,20 L50,60 Z" />
+                <path d="M50,60 L40,90" />
+                <path d="M50,60 L80,80" />
+            </svg>
+        </div>
+        
+        <div class="chalk-drawing drawing-ruler">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#66ff99" stroke-width="2">
+                <path d="M10,30 L90,30 L90,50 L10,50 Z" />
+                <path d="M20,30 L20,40" />
+                <path d="M30,30 L30,45" />
+                <path d="M40,30 L40,40" />
+                <path d="M50,30 L50,45" />
+                <path d="M60,30 L60,40" />
+                <path d="M70,30 L70,45" />
+                <path d="M80,30 L80,40" />
+            </svg>
+        </div>
+        
+        <!-- Random eraser marks -->
+        <div class="eraser-mark" style="top: 45%; left: 30%; width: 100px; height: 40px; transform: rotate(25deg);"></div>
+        <div class="eraser-mark" style="top: 70%; right: 20%; width: 80px; height: 30px; transform: rotate(-15deg);"></div>
+        <div class="eraser-mark" style="top: 20%; left: 60%; width: 120px; height: 35px; transform: rotate(5deg);"></div>
+        
+        <div class="score-display">Round: <span id="round-number">1</span></div>
+        
+        <div class="header">
+            <h1>Alphabet Match</h1>
+            <div class="subtitle">Drag the uppercase letters to match with their lowercase pairs!</div>
+        </div>
+
+        <div class="game-container">
+            <div class="matching-area">
+                <div class="column">
+                    <div class="column-header">UPPERCASE</div>
+                    <div class="letters" id="letters"></div>
+                </div>
+                <div class="column">
+                    <div class="column-header">lowercase</div>
+                    <div class="targets" id="targets"></div>
+                </div>
+            </div>
+            <div id="message"></div>
+            <button id="next-round">Next Round!</button>
+        </div>
+    </div>
+
+    <script>
+        const lettersContainer = document.getElementById('letters');
+        const targetsContainer = document.getElementById('targets');
+        const message = document.getElementById('message');
+        const nextRoundButton = document.getElementById('next-round');
+        const roundNumber = document.getElementById('round-number');
+        let correctMatches = 0;
+        let round = 1;
+
+        function generateLetters() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const shuffled = alphabet.split('').sort(() => 0.5 - Math.random());
+            const letters = shuffled.slice(0, 5);
+            const lowerCaseLetters = letters.map(letter => letter.toLowerCase()).sort(() => Math.random() - 0.5);
+
+            lettersContainer.innerHTML = '';
+            targetsContainer.innerHTML = '';
+            correctMatches = 0;
+            message.textContent = '';
+            message.className = '';
+            nextRoundButton.style.display = 'none';
+            roundNumber.textContent = round;
+
+            letters.forEach(letter => {
+                const div = document.createElement('div');
+                div.className = 'letter';
+                div.textContent = letter;
+                div.id = letter;
+                div.draggable = true;
+                lettersContainer.appendChild(div);
+                div.addEventListener('dragstart', dragStart);
+            });
+
+            lowerCaseLetters.forEach(letter => {
+                const div = document.createElement('div');
+                div.className = 'target';
+                div.textContent = letter;
+                div.dataset.match = letter.toUpperCase();
+                targetsContainer.appendChild(div);
+                div.addEventListener('dragover', dragOver);
+                div.addEventListener('drop', drop);
+            });
+        }
+
+        function dragStart(event) {
+            event.dataTransfer.setData('text', event.target.id);
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const draggedLetter = event.dataTransfer.getData('text');
+            const target = event.target.closest('.target');
+            if (!target) return;
+
+            if (draggedLetter === target.dataset.match) {
+                target.textContent = draggedLetter;
+                target.classList.add('matched');
+                document.getElementById(draggedLetter).style.visibility = 'hidden';
+                correctMatches++;
+
+                if (correctMatches === 5) {
+                    message.textContent = `Great job! You completed Round ${round}! 🎉`;
+                    message.className = 'success';
+                    nextRoundButton.style.display = 'block';
+                    round++;
+                }
+            } else {
+                message.textContent = 'Oops! Try again. 😊';
+                message.className = 'error';
+                setTimeout(() => {
+                    message.textContent = '';
+                    message.className = '';
+                }, 1500);
+            }
+        }
+
+        nextRoundButton.addEventListener('click', () => {
+            generateLetters();
+        });
+
+        generateLetters();
+    </script>
+</body>
+</html>

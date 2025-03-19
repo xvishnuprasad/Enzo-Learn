@@ -1,0 +1,487 @@
+Enhanced Educational Flashcards with Emojis and Fun Graphics
+Preview
+Code
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Flashcards</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #fdfaf0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23bae6a2' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid #8cd16f;
+        }
+        .categories-title {
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: inline-block;
+        }
+        .categories-title::before {
+            content: "🌈";
+            position: absolute;
+            left: -40px;
+            top: 0;
+        }
+        .categories-title::after {
+            content: "🌈";
+            position: absolute;
+            right: -40px;
+            top: 0;
+        }
+        .category-selector {
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+        .category-selector::before {
+            content: "📚";
+            position: absolute;
+            left: -30px;
+            top: 10px;
+            font-size: 24px;
+        }
+        select {
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 3px solid #8cd16f;
+            background-color: #fff;
+            width: 220px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238CD16F%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px top 50%;
+            background-size: 12px auto;
+            padding-right: 30px;
+        }
+        .instruction {
+            margin: 15px 0 25px;
+            font-style: italic;
+            color: #666;
+            font-size: 18px;
+            position: relative;
+            display: inline-block;
+        }
+        .instruction::before {
+            content: "👆";
+            position: absolute;
+            left: -30px;
+            top: -2px;
+        }
+        .flashcard-container {
+            width: 350px;
+            height: 250px;
+            perspective: 1000px;
+            margin: 0 auto 30px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+        }
+        .front {
+            border: 3px solid #8cd16f;
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238cd16f' fill-opacity='0.1'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .back {
+            border: 3px solid #6dbff5;
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236dbff5' fill-opacity='0.1'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            transform: rotateY(180deg);
+        }
+        .front::before, .back::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 40px;
+            top: 0;
+            left: 0;
+            background: linear-gradient(to right, rgba(140, 209, 111, 0.2), rgba(140, 209, 111, 0.4), rgba(140, 209, 111, 0.2));
+            border-radius: 17px 17px 0 0;
+        }
+        .back::before {
+            background: linear-gradient(to right, rgba(109, 191, 245, 0.2), rgba(109, 191, 245, 0.4), rgba(109, 191, 245, 0.2));
+        }
+        .front-text, .back-text {
+            z-index: 1;
+            max-width: 100%;
+            padding: 10px;
+            font-size: 28px;
+        }
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            background-color: #8cd16f;
+            color: #333;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        .prev-btn::before {
+            content: "👈";
+            margin-right: 8px;
+        }
+        .next-btn::after {
+            content: "👉";
+            margin-left: 8px;
+        }
+        button:hover {
+            background-color: #75b85a;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .card-counter {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #666;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        /* Category icons */
+        .category-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 36px;
+            opacity: 0.2;
+        }
+        /* Decorative elements */
+        .decorative-element {
+            position: absolute;
+            font-size: 24px;
+            animation: float 3s ease-in-out infinite;
+        }
+        .star1 {
+            top: 20px;
+            right: 30px;
+            animation-delay: 0s;
+        }
+        .star2 {
+            bottom: 50px;
+            left: 40px;
+            animation-delay: 0.5s;
+        }
+        .star3 {
+            bottom: 20px;
+            right: 40px;
+            animation-delay: 1s;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #ff9a9e;
+            opacity: 0.6;
+            border-radius: 50%;
+            animation: fall 10s linear infinite;
+        }
+        .confetti:nth-child(odd) {
+            background-color: #a18cd1;
+        }
+        .confetti:nth-child(3n) {
+            background-color: #fad0c4;
+        }
+        .confetti:nth-child(4n) {
+            background-color: #fbc2eb;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(calc(100vh - 100px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Decorative elements -->
+        <div class="decorative-element star1">✨</div>
+        <div class="decorative-element star2">⭐</div>
+        <div class="decorative-element star3">✨</div>
+        
+        <!-- Create confetti elements -->
+        <script>
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(confetti);
+            }
+        </script>
+        
+        <div class="categories-title">CATEGORIES</div>
+        
+        <div class="category-selector">
+            <select id="category-select" onchange="changeCategory()">
+                <option value="emotions">Emotions 😊</option>
+                <option value="animals">Animals 🐶</option>
+                <option value="colors">Colors 🎨</option>
+                <option value="shapes">Shapes 🔷</option>
+                <option value="routines">Daily Routines ⏰</option>
+                <option value="safety">Safety Rules 🛡️</option>
+            </select>
+        </div>
+        
+        <p class="instruction">Click on card to flip it!</p>
+        
+        <div class="flashcard-container" id="flashcard-container">
+            <div class="flashcard" id="flashcard">
+                <div class="front" id="front">
+                    <div class="category-icon" id="category-icon">😊</div>
+                    <div class="front-text" id="front-text">Loading...</div>
+                </div>
+                <div class="back" id="back">
+                    <div class="back-text" id="back-text">Loading...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-counter" id="card-counter">Card 1 of 5</div>
+        
+        <div class="button-container">
+            <button class="prev-btn" onclick="previousCard()">Previous</button>
+            <button class="next-btn" onclick="nextCard()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const flashcard = document.getElementById('flashcard');
+        const frontText = document.getElementById('front-text');
+        const backText = document.getElementById('back-text');
+        const cardCounter = document.getElementById('card-counter');
+        const categorySelect = document.getElementById('category-select');
+        const categoryIcon = document.getElementById('category-icon');
+
+        // Flashcard data for different categories
+        const flashcardData = {
+            emotions: [
+                { front: "Happy 😊", back: "A feeling when something good happens" },
+                { front: "Sad 😢", back: "A feeling when something makes you feel down" },
+                { front: "Angry 😠", back: "A feeling when something is not fair" },
+                { front: "Scared 😨", back: "A feeling when something seems dangerous" },
+                { front: "Surprised 😲", back: "A feeling when something unexpected happens" }
+            ],
+            animals: [
+                { front: "Dog 🐶", back: "A furry pet that barks and wags its tail" },
+                { front: "Cat 🐱", back: "A furry pet that meows and purrs" },
+                { front: "Elephant 🐘", back: "A large animal with a long trunk" },
+                { front: "Giraffe 🦒", back: "An animal with a very long neck" },
+                { front: "Penguin 🐧", back: "A bird that swims and lives in cold places" }
+            ],
+            colors: [
+                { front: "Red ❤️", back: "The color of apples and fire trucks" },
+                { front: "Blue 💙", back: "The color of the sky and ocean" },
+                { front: "Yellow 💛", back: "The color of the sun and bananas" },
+                { front: "Green 💚", back: "The color of grass and leaves" },
+                { front: "Purple 💜", back: "The color of grapes and eggplants" }
+            ],
+            shapes: [
+                { front: "Circle ⭕", back: "A round shape like a ball" },
+                { front: "Square 🟥", back: "A shape with four equal sides" },
+                { front: "Triangle 🔺", back: "A shape with three sides" },
+                { front: "Rectangle 🟩", back: "A shape with four sides and two long sides" },
+                { front: "Star ⭐", back: "A shape with five points" }
+            ],
+            routines: [
+                { front: "Wake Up 🌞", back: "Time to start the day" },
+                { front: "Brush Teeth 🪥", back: "Clean your teeth in the morning and night" },
+                { front: "Get Dressed 👕", back: "Put on your clothes for the day" },
+                { front: "Eat Meals 🍽️", back: "Breakfast, lunch, and dinner times" },
+                { front: "Bedtime 😴", back: "Time to go to sleep" }
+            ],
+            safety: [
+                { front: "Look Both Ways 👀", back: "Before crossing the street" },
+                { front: "Don't Talk to Strangers 🚫", back: "Without a trusted adult" },
+                { front: "Wear a Helmet 🪖", back: "When riding a bike or scooter" },
+                { front: "Emergency Number 📞", back: "Call 911 if there's an emergency" },
+                { front: "Stop, Drop, and Roll 🔥", back: "If your clothes catch fire" }
+            ]
+        };
+
+        // Category icons
+        const categoryIcons = {
+            emotions: "😊",
+            animals: "🐶",
+            colors: "🎨",
+            shapes: "🔷",
+            routines: "⏰",
+            safety: "🛡️"
+        };
+
+        let currentCategory = 'emotions';
+        let currentIndex = 0;
+
+        // Initialize with the first category
+        updateCard();
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+            playFlipSound();
+        });
+
+        function changeCategory() {
+            currentCategory = categorySelect.value;
+            currentIndex = 0;
+            updateCard();
+            flashcard.classList.remove('flipped');
+        }
+
+        function updateCard() {
+            const cards = flashcardData[currentCategory];
+            frontText.textContent = cards[currentIndex].front;
+            backText.textContent = cards[currentIndex].back;
+            cardCounter.textContent = `Card ${currentIndex + 1} of ${cards.length}`;
+            categoryIcon.textContent = categoryIcons[currentCategory];
+        }
+
+        function nextCard() {
+            const cards = flashcardData[currentCategory];
+            currentIndex = (currentIndex + 1) % cards.length;
+            flashcard.classList.remove('flipped');
+            setTimeout(updateCard, 300);
+            playButtonSound();
+        }
+
+        function previousCard() {
+            const cards = flashcardData[currentCategory];
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            flashcard.classList.remove('flipped');
+            setTimeout(updateCard, 300);
+            playButtonSound();
+        }
+
+        function playFlipSound() {
+            // Simple sound effect function - could be replaced with actual sound files
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 440;
+            gainNode.gain.setValueAtTime(0.1, context.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.3);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.3);
+        }
+
+        function playButtonSound() {
+            // Simple sound effect function - could be replaced with actual sound files
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 660;
+            gainNode.gain.setValueAtTime(0.1, context.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.2);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.2);
+        }
+    </script>
+</body>
+</html>
