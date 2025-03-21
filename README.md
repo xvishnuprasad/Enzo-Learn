@@ -17,7 +17,7 @@ Our solution is designed with universal access in mind, ensuring a seamless expe
 We incorporate engaging games and interactive activities that not only make learning enjoyable but also enhance information retention.
 
 ### EnzoBot Assistant
-<Image src="/path/to/chatbot-assistant-image.png" alt="EnzoBot Assistant" width={800} height={400} />
+<Image src="chatbot-assistant-image.png" alt="chatbot-assistant-image" width={800} height={400} />
 
 EnzoBot, our intelligent AI companion, provides personalized guidance and support, helping students navigate their learning journey efficiently.
 
