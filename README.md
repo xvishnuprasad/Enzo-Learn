@@ -52,7 +52,7 @@ Meet **EnzoBot** – your dedicated AI companion who is always ready to assist a
 
 ## Collaborators and Teams
 
-- **@akzibvishanth**
+- **@akzibvishanth (Akzib Vishanth)**
 - **@AnnaAiswaryaa (Anna Aiswarya)**
 - **@Vanshika040705 (D.T. Vanshika)** 
 
