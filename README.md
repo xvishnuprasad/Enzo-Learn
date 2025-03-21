@@ -16,7 +16,7 @@ Ensuring a seamless experience for all users, our platform embraces universal ac
 ### 🎮 Interactive Learning
 We make learning fun with engaging games and interactive activities that boost retention and enjoyment.
 
-### 🤖 Meet EnzoBot
+## 🤖 Meet EnzoBot
 <Image src="chatbot-assistant-image.png" alt="EnzoBot - Your AI Learning Assistant" width={800} height={400} className="rounded-lg shadow-lg mx-auto" />
 
 EnzoBot, our intelligent AI companion, offers personalized guidance and support, making every step of the learning journey smooth and efficient.
