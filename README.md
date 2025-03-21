@@ -32,7 +32,7 @@ Connect with peers and educators through our community-driven features designed 
 
 ## Learning Tools
 
-<Image src="/path/to/learning-tools-image.png" alt="Learning Tools" width={800} height={400} />
+<Image src="learning-tools-image.png" alt="learning-tools-image" width={800} height={400} />
 
 Explore our diverse range of interactive learning tools:
 - **Memory Game**
