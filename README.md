@@ -59,6 +59,7 @@ At Enzo Learn, our mission is to empower every student by adapting to their indi
 ## 🤝 Collaborators and Teams
 
 Enzo Learn is powered by the passion and dedication of:
+- **@Reshma-212 (Reshma)**
 - **@akzibvishanth (Akzib Vishanth)**
 - **@AnnaAiswaryaa (Anna Aiswarya)**
 - **@Vanshika040705 (D.T. Vanshika)**
